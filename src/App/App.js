@@ -4,6 +4,7 @@ import connection from '../helpers/data/connection';
 
 import Auth from '../components/Auth/Auth';
 import Listings from '../components/Listings/Listings';
+import MyNavbar from '../components/MyNavbar/MyNavbar';
 import './App.scss';
 
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
     if (!this.state.authed) {
       return (
         <div className="App">
+          <MyNavbar />
           <Auth isAuthenticated={this.isAuthenticated}/>
         </div>
       );
@@ -30,6 +32,7 @@ class App extends Component {
 
     return (
       <div className="App">
+        <MyNavbar />
         <Listings />
       </div>
     );

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 import connection from '../helpers/data/connection';
 
@@ -6,6 +8,7 @@ import Auth from '../components/Auth/Auth';
 import Listings from '../components/Listings/Listings';
 import MyNavbar from '../components/MyNavbar/MyNavbar';
 import './App.scss';
+import authRequests from '../helpers/data/authRequests';
 
 class App extends Component {
   state = {
@@ -14,6 +17,21 @@ class App extends Component {
 
   componentDidMount() {
     connection();
+    this.removeListener = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({
+          authed: true,
+        });
+      } else {
+        this.setState({
+          authed: false,
+        });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.removeListener();
   }
 
   isAuthenticated = () => {
@@ -21,10 +39,15 @@ class App extends Component {
   }
 
   render() {
+    const logoutClickEvent = () => {
+      authRequests.logoutUser();
+      this.setState({ authed: false });
+    };
+
     if (!this.state.authed) {
       return (
         <div className="App">
-          <MyNavbar />
+          <MyNavbar isAuthed={this.state.authed} logoutClickEvent={logoutClickEvent} />
           <Auth isAuthenticated={this.isAuthenticated}/>
         </div>
       );
@@ -32,7 +55,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <MyNavbar />
+        <MyNavbar isAuthed={this.state.authed} logoutClickEvent={logoutClickEvent} />
         <Listings />
       </div>
     );

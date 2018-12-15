@@ -5,7 +5,7 @@ import './Auth.scss';
 
 class Auth extends React.Component {
 static propTypes = {
-  isAuthenticated: PropTypes.string,
+  isAuthenticated: PropTypes.func,
 }
 
   authenticateUser = (e) => {
